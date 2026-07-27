@@ -1,0 +1,24 @@
+{
+  "name": "hidden-places",
+  "version": "1.0.0",
+  "description": "Proyecto personal que busca incentivar a los jóvenes de mi universidad a adentrarse en lugares poco ortodoxos para ganar premios",
+  "keywords": [
+    "hidden",
+    "places",
+    "incentivize",
+    "prize"
+  ],
+  "license": "MIT",
+  "author": "Edgar Trejo Avila",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "firebase": "^12.16.0"
+  }
+}
