@@ -1,16 +1,28 @@
-<ul>
-    <li <%- currentPage == 'home'? 'data-resaltado="true"': '' %>>
-        <a href="">
+<ul class="mi-menu">
+    <li
+        class="mi-menu__item"
+        <%- currentPage == 'home'? 'data-resaltado="true"': '' %>>
+        <a
+            class="mi-menu__link text"
+            href="">
             Inicio
         </a>
     </li>
-    <li <%- currentPage == 'won'? 'data-resaltado="true"': '' %>>
-        <a href="">
+    <li
+        class="mi-menu__item"
+        <%- currentPage == 'won'? 'data-resaltado="true"': '' %>>
+        <a
+            class="mi-menu__link text"
+            href="">
             Ganados
         </a>
     </li>
-    <li <%- currentPage == 'all'? 'data-resaltado="true"': '' %>>
-        <a href="">
+    <li
+        class="mi-menu__item"
+        <%- currentPage == 'all'? 'data-resaltado="true"': '' %>>
+        <a
+            class="mi-menu__link text"
+            href="">
             Todos los lugares
         </a>
     </li>

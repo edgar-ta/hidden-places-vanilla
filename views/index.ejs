@@ -14,14 +14,17 @@
     const currentPage = 'home';
     %>
     <%- include('partials/menu', { currentPage }) %>
-    <h1>
-        ¿Qué es Hidden Places?
-    </h1>
-    <p>
-        Ésta es una iniciativa que busca hacer que las personas 
-        presten más atención a aquellos lugares que a veces
-        pasan desapercibidos
-    </p>
+    <div class="index-content__container">
+        <h1 class="title">
+            ¿Qué es Hidden Places?
+        </h1>
+        <p class="index-content__text text">
+            Ésta es una iniciativa que busca hacer que las personas 
+            presten más atención a aquellos lugares que a veces
+            pasan desapercibidos
+        </p>
+    </div>
+    <hr class="divisor-line">
     <%- include('partials/username-form') %>
 </body>
 </html>
