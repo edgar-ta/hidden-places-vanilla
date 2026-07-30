@@ -116,6 +116,22 @@ END::INDEX::END
 END::INDEX::END
 **/
 
+/**
+START::SIGHTSEEING::START
+START::SIGHTSEEING::START
+START::SIGHTSEEING::START
+**/
+
+.sightseeing__content-container {
+    
+}
+
+/**
+END::SIGHTSEEING::END
+END::SIGHTSEEING::END
+END::SIGHTSEEING::END
+**/
+
 .text {
     font-size: 1.25rem;
 }

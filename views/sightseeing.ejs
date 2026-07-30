@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Edgar Trejo Avila">
+    <link rel="stylesheet" href="/main.css">
+    <script defer src="/sightseeing.js"></script>
+    <script>
+        const placeId = '<%= id %>';
+        const getPlaceId = () => placeId;
+    </script>
+    <title>Hidden Places</title>
+</head>
+<body>
+    <%
+    const currentPage = 'home';
+    %>
+    <%- include('partials/menu', { currentPage }) %>
+
+    <div class="sightseeing__content-container">
+        <h1 class="title">
+            Lugar <%= id %>
+        </h1>
+    </div>
+
+    <hr class="divisor-line">
+    <%- include('partials/username-form') %>
+</body>
+</html>
