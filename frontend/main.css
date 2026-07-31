@@ -1,10 +1,17 @@
 :root {
     font-family: sans-serif;
+
+    --text-font-size: 1.25rem;
+    --title-font-size: 2.5rem;
 }
 
 body {
     margin: 0;
     padding: 0;
+}
+
+a, input {
+    font-size: var(--text-font-size);
 }
 
 /**
@@ -123,7 +130,127 @@ START::SIGHTSEEING::START
 **/
 
 .sightseeing__content-container {
-    
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 2rem 1rem;
+}
+
+.sightseeing__loading-spinner,
+.sightseeing__winner-content, 
+.sightseeing__non-winner-content,
+.sightseeing__winner-content__first-time,
+.sightseeing__winner-content__not-first-time {
+    display: none;
+}
+
+.sightseeing__content-container[data-state="loading"]
+.sightseeing__loading-spinner 
+{
+    display: flex;
+}
+
+.sightseeing__content-container[data-state="loaded"][data-prize-state="prize_pending"]
+.sightseeing__winner-content 
+{
+    display: flex;
+}
+
+.sightseeing__content-container[data-state="loaded"][data-prize-state="prize_pending"][data-is-first-time="true"]
+.sightseeing__winner-content__first-time
+{
+    display: flex;
+}
+
+.sightseeing__content-container[data-state="loaded"][data-prize-state="prize_pending"][data-is-first-time="false"]
+.sightseeing__winner-content__not-first-time
+{
+    display: flex;
+}
+
+.sightseeing__content-container[data-state="loaded"][data-prize-state="null"]
+.sightseeing__non-winner-content 
+{
+    display: flex;
+}
+
+.sightseeing__loading-spinner {
+    flex-direction: column;
+    align-items: center;
+    min-height: 30vh;
+    justify-content: center;
+}
+
+.loader {
+  --color-1: #0015FF;
+  --color-2: #8A8A8A;
+  --size: 1px;
+
+  width: calc(48 * var(--size));
+  height: calc(48 * var(--size));
+  border: calc(5 * var(--size)) solid var(--color-1);
+  border-bottom-color: var(--color-2);
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.sightseeing__winner-content {
+    flex-direction: column;
+}
+
+.sightseeing__winner-content__not-first-time {
+    flex-direction: column;
+}
+
+.redeem-code {
+    display: flex;
+    background-color: #EAEAEA;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.75rem;
+    justify-content: space-between;
+}
+
+.redeem-code__input {
+    background-color: transparent;
+    border: none;
+    font-weight: bolder;
+    color: black;
+}
+
+.redeem-code__button {
+    color: black;
+    border: none;
+    background-color: transparent;
+    font-size: 1.5rem;
+}
+
+.contact-tray {
+    display: flex;
+}
+
+.contact-tray__button {
+    display: block;
+    font-size: 2.5rem;
+    padding: 0.5rem 0;
+    background-color: transparent;
+    border: none;
+}
+
+.why-link {
+    color: blue;
+    text-decoration: underline;
+    text-align: center;
 }
 
 /**
@@ -133,12 +260,12 @@ END::SIGHTSEEING::END
 **/
 
 .text {
-    font-size: 1.25rem;
+    font-size: var(--text-font-size);
 }
 
 .title {
     font-weight: bold;
-    font-size: 2.5rem;
+    font-size: var(--title-font-size);
     text-align: center;
     margin: 0;
     padding: 0;

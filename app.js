@@ -3,8 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { config as dotenvConfig } from 'dotenv';
 
-import { router } from './api.js';
-
 dotenvConfig();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,8 +23,6 @@ app.get('/', (request, response) => {
 app.get('/lugar/:id', (request, response) => {
     response.render("sightseeing", request.params);
 });
-
-app.use('/api', router);
 
 app.listen(port, () => {
     console.log(`Escuchando en http://localhost:${port}`);

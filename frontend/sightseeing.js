@@ -1,11 +1,15 @@
+import { ensureSightseeingExists } from "./main.js";
+import { ensureUserExists } from "./main.js";
+
 const COOKIE_NAME = "_hidden_places_id";
 
 /**
- * Set a cookie with optional expiration days and path
- * @param {string} name - Cookie name
- * @param {string} value - Cookie value
- * @param {number} [days] - Expiration in days (optional)
- * @param {string} [path] - Path scope (default "/")
+ * Guarda una cookie con parámetros opiconales de 
+ * fecha de expiración y ruta
+ * @param {string} name Nombre de la cookie
+ * @param {string} value Valor de la cookie
+ * @param {number} [days] Días para expirar (opcional)
+ * @param {string} [path] Ruta (por defecto "/")
  */
 function setCookie(name, value, days, path = "/") {
     if (!name || /[=;]/.test(name)) {
@@ -22,9 +26,9 @@ function setCookie(name, value, days, path = "/") {
 }
 
 /**
- * Get a cookie value by name
- * @param {string} name - Cookie name
- * @returns {string|null} - Cookie value or null if not found
+ * Obtiene el valor de una cookie por nombre
+ * @param {string} name El nombre de la cookie
+ * @returns {string|null} El valor de la cookie o null si no se encontró
  */
 function getCookie(name) {
     const nameEQ = encodeURIComponent(name) + "=";
@@ -37,43 +41,48 @@ function getCookie(name) {
     return null;
 }
 
-
-async function registerSightseeing() {
-    let hiddenPlacesId = getCookie(COOKIE_NAME);
-    if (hiddenPlacesId === null) {
-        hiddenPlacesId = crypto.randomUUID();
-        setCookie(COOKIE_NAME, hiddenPlacesId);
+/**
+ * Se asegura de que un usuario esté registrado
+ * en la BD o lo registra de no estarlo. Además,
+ * si la página que visitó el usuario corresponde
+ * con un lugar, registra su avistamiento.
+ */
+async function registerUserAndTrySightseeing() {
+    let userId = getCookie(COOKIE_NAME);
+    if (userId === null) {
+        userId = crypto.randomUUID();
+        setCookie(COOKIE_NAME, userId);
     }
+
+    await ensureUserExists(userId);
 
     const placeId = getPlaceId();
-    const data = {
-        hiddenPlacesId,
-        placeId
+    if (placeId !== null) {
+        const { prizeState, sightseeingJustCreated } = await ensureSightseeingExists(userId, placeId);
+        const container = document.getElementById("contentContainer");
+
+        container.setAttribute("data-state", "loaded");
+        container.setAttribute("data-prize-state", ("" + prizeState).toLowerCase());
+        container.setAttribute("data-is-first-time", sightseeingJustCreated);
     }
-
-    await fetch(
-        "/api/sightsee", 
-        { 
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-    )
-    .then(response => response.json())
-    .then(response => {
-        console.log(response)
-    });
-
-    // 1. Buscar la cookie _hidden_places_id (si no existe, utilizar una id única)
-    // 2. Llamar a una API del backend para registrar un avistamiento nuevo
 }
 
-async function main() {
-    await registerSightseeing();
+/**
+ * Obtiene la id del lugar asociado con la página
+ * que el usuario visitó
+ * 
+ * Solo funciona si el usuario visitó la página 
+ * `sightseeing.ejs`
+ * 
+ * @returns {string} La id del lugar en cuestión
+ */
+function getPlaceId() {
+    /** @type {HTMLInputElement} */
+    const input = document.getElementById("placeIdInput");
+    const placeId = input.value;
+    return placeId;
 }
 
 (async () => {
-    main();
+    await registerUserAndTrySightseeing();
 })();
