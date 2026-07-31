@@ -5,26 +5,86 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Edgar Trejo Avila">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css" integrity="sha512-ApSLB1Pd3/bZN8fWB/RG9YhN/7bd9Hkf3AGaE2mPfebjrxagjuBtx2GcgdqIlJkUzwylBo61r9Xa9NmgBI0swA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/main.css">
-    <script defer src="/sightseeing.js"></script>
-    <script>
-        const placeId = '<%= id %>';
-        const getPlaceId = () => placeId;
-    </script>
+
+    <script defer src="/dist/main.js"></script>
     <title>Hidden Places</title>
 </head>
 <body>
     <%
-    const currentPage = 'home';
+    const currentPage = '';
     %>
     <%- include('partials/menu', { currentPage }) %>
 
-    <div class="sightseeing__content-container">
-        <h1 class="title">
-            Lugar <%= id %>
-        </h1>
-    </div>
+    <div 
+        id="contentContainer" 
+        class="sightseeing__content-container" 
 
+        data-state="loading"
+        data-prize-state=""
+        data-is-first-time="" 
+        >
+        <div class="sightseeing__loading-spinner">
+            <span class="loader"></span>
+            <h1 class="title">
+                Cargando
+            </h1>
+        </div>
+        <div class="sightseeing__winner-content">
+            <div class="sightseeing__winner-content__first-time">
+                <h1 class="title">
+                    Hola, Usuario123
+                    <br>
+                    ¡Felicidades!
+                </h1>
+                <p>
+                    Por ser la primera persona 
+                    en escanear este código QR
+                    te has ganado
+                </p>
+                <h1>
+                    $50 pesos
+                </h1>
+                <p>
+                    Utiliza el siguiente código secreto
+                    para contactar con el organizador y
+                    reclamar tu premio
+                </p>
+            </div>
+            <div class="sightseeing__winner-content__not-first-time">
+                <h1 class="title">
+                    Hola, Usuario123
+                </h1>
+                <p class="text">
+                    La última vez ganaste $50 pesos.
+                    Reclámalos usando el siguiente código
+                </p>
+            </div>
+            <div class="redeem-code">
+                <input class="redeem-code__input type="text" disabled value="yhlqmdlg32">
+                <button class="redeem-code__button">
+                    <i class="fa-solid fa-copy"></i>
+                </button>
+            </div>
+            <div class="contact-tray">
+                <button class="contact-tray__button">
+                    <i class="fa-brands fa-facebook"></i>
+                </button>
+                <button class="contact-tray__button">
+                    <i class="fa-brands fa-instagram"></i>
+                </button>
+            </div>
+            <a href="/" class="why-link">
+                ¿Por qué me gané esto?
+            </a>
+        </div>
+        <div class="sightseeing__non-winner-content">
+
+        </div>
+    </div>
+    <input type="hidden" id="placeIdInput" value="<%= id %>">
     <hr class="divisor-line">
     <%- include('partials/username-form') %>
 </body>
