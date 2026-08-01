@@ -1,7 +1,8 @@
 import { ensureSightseeingExists } from "./main.js";
 import { ensureUserExists } from "./main.js";
 
-const COOKIE_NAME = "_hidden_places_id";
+const COOKIE_ID = "_hidden_places_id";
+const COOKIE_USERNAME = "_hidden_places_username";
 
 /**
  * Guarda una cookie con parámetros opiconales de 
@@ -48,15 +49,21 @@ function getCookie(name) {
  * con un lugar, registra su avistamiento.
  */
 async function registerUserAndTrySightseeing() {
-    let userId = getCookie(COOKIE_NAME);
+    let userId = getCookie(COOKIE_ID);
     if (userId === null) {
         userId = crypto.randomUUID();
-        setCookie(COOKIE_NAME, userId);
+        setCookie(COOKIE_ID, userId);
     }
 
-    await ensureUserExists(userId);
+    const userPayload = await ensureUserExists(userId);
+    if (userPayload.userJustCreated) {
+        setCookie(COOKIE_USERNAME, userPayload.username);
+        document.getElementById("spanUsername").textContent = userPayload.username;
+    }
 
+    const username = userPayload.userJustCreated? userPayload.username: getCookie(COOKIE_USERNAME);
     const placeId = getPlaceId();
+
     if (placeId !== null) {
         const { prizeState, sightseeingJustCreated } = await ensureSightseeingExists(userId, placeId);
         const container = document.getElementById("contentContainer");

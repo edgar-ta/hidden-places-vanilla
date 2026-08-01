@@ -51,6 +51,13 @@ async function getDefaultUsername() {
  * 
  * @param {string} userId La id del usuario 
  * a verificar
+ * 
+ * @returns {{
+ *  userJustCreated: boolean;
+ *  username?: string;
+ * }} Un objeto que indica si el usuario acaba
+ * de ser registrado en la BD y, de así serlo, 
+ * su nombre de usuario
  */
 export async function ensureUserExists(userId) {
     const usersCollection = collection(db, "users");
@@ -59,9 +66,22 @@ export async function ensureUserExists(userId) {
 
     if (!userSnap.exists()) {
         const username = await getDefaultUsername();
-        const user = { username };
+        /** @type {import('./types.js').UserModel} */
+        const user = { 
+            username,
+            creationDate: Timestamp.now()
+        };
         await setDoc(userRef, user);
+
+        return {
+            userJustCreated: true,
+            username
+        };
     }
+
+    return {
+        userJustCreated: false,
+    };
 }
 
 
@@ -77,7 +97,7 @@ export async function ensureUserExists(userId) {
  * 
  * @returns {{ 
  *  sightseeingJustCreated: boolean, 
- *  prizeState: import("./types.js").PrizeState | null
+ *  prizeState: import("./types.js").PrizeState | null,
  * }} Si el avistamiento fue
  * recién creado o no
  */
@@ -102,13 +122,15 @@ export async function ensureSightseeingExists(userId, placeId) {
         };
 
         if (isWinner) {
+            // @todo Incluir una función que diga si el usuario
+            // ya cobró su premio o no
             sightseeing.isRedeemed = false;
         }
 
         const document = await addDoc(sightseeingCollection, sightseeing);
 
         return {
-            sightseeingJustCreated,
+            sightseeingJustCreated: true,
             prizeState: isWinner? "PRIZE_PENDING": null
         };
     }
