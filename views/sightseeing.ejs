@@ -7,7 +7,8 @@
     <meta name="author" content="Edgar Trejo Avila">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css" integrity="sha512-ApSLB1Pd3/bZN8fWB/RG9YhN/7bd9Hkf3AGaE2mPfebjrxagjuBtx2GcgdqIlJkUzwylBo61r9Xa9NmgBI0swA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/sightseeing.css">
 
     <script defer src="/dist/main.js"></script>
     <title>Hidden Places</title>
@@ -22,8 +23,10 @@
         id="contentContainer" 
         class="sightseeing__content-container" 
 
-        data-state="loading"
-        data-prize-state=""
+        data-is-loading="true"
+        data-is-valid-season="" 
+        data-is-winner=""
+        data-is-prize-redeemed=""
         data-is-first-time="" 
         >
         <div class="sightseeing__loading-spinner">
@@ -32,22 +35,27 @@
                 Cargando
             </h1>
         </div>
+        <div class="sightseeing__invalid-season-content">
+            <p class="text">
+                La temporada ya terminó
+            </p>
+        </div>
         <div class="sightseeing__winner-content">
             <div class="sightseeing__winner-content__first-time">
                 <h1 class="title">
-                    Hola, <span id="spanUsername"></span>
+                    Hola, <span class="span-username"></span>
                     <br>
                     ¡Felicidades!
                 </h1>
-                <p>
+                <p class="text">
                     Por ser la primera persona 
                     en escanear este código QR
                     te has ganado
                 </p>
-                <h1>
+                <h1 class="title">
                     $50 pesos
                 </h1>
-                <p>
+                <p class="text">
                     Utiliza el siguiente código secreto
                     para contactar con el organizador y
                     reclamar tu premio
@@ -55,7 +63,7 @@
             </div>
             <div class="sightseeing__winner-content__not-first-time">
                 <h1 class="title">
-                    Hola, Usuario123
+                    Hola, <span class="span-username"></span>
                 </h1>
                 <p class="text">
                     La última vez ganaste $50 pesos.
@@ -81,7 +89,31 @@
             </a>
         </div>
         <div class="sightseeing__non-winner-content">
-
+            <div class="sightseeing__non-winner-content__first-time">
+                <h1 class="title">
+                    Hola, <span class="span-username"></span><br>
+                    ¡Felicidades!
+                </h1>
+                <p class="text">
+                    Eres la persona número 53 en escanear este código
+                    QR.
+                </p>
+                <p class="text">
+                    Sigue buscando más códigos y, si eres la primera persona 
+                    en escanearlo, ganarás un premio.
+                </p>
+            </div>
+            <div class="sightseeing__non-winner-content__not-first-time">
+                <h2 class="title">
+                    Hola, <span class="span-username"></span>
+                </h2>
+                <p class="text">
+                    Eres la persona número 53 en escanear este código QR
+                </p>
+            </div>
+            <a href="/" class="why-link">
+                ¿Qué es esta página?
+            </a>
         </div>
     </div>
     <input type="hidden" id="placeIdInput" value="<%= id %>">

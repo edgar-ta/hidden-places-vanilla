@@ -58,18 +58,28 @@ async function registerUserAndTrySightseeing() {
     const userPayload = await ensureUserExists(userId);
     if (userPayload.userJustCreated) {
         setCookie(COOKIE_USERNAME, userPayload.username);
-        document.getElementById("spanUsername").textContent = userPayload.username;
     }
 
     const username = userPayload.userJustCreated? userPayload.username: getCookie(COOKIE_USERNAME);
     const placeId = getPlaceId();
 
+    document.querySelectorAll(".span-username").forEach((element) => {
+        element.textContent = username;
+    })
+
     if (placeId !== null) {
-        const { prizeState, sightseeingJustCreated } = await ensureSightseeingExists(userId, placeId);
+        const { 
+            sightseeingJustCreated,
+            isWinner,
+            isPrizeRedeemed,
+            isValidSeason
+         } = await ensureSightseeingExists(userId, placeId);
         const container = document.getElementById("contentContainer");
 
-        container.setAttribute("data-state", "loaded");
-        container.setAttribute("data-prize-state", ("" + prizeState).toLowerCase());
+        container.setAttribute("data-is-loading", "false");
+        container.setAttribute("data-is-valid-season", isValidSeason);
+        container.setAttribute("data-is-winner", isWinner);
+        container.setAttribute("data-is-prize-redeemed", isPrizeRedeemed);
         container.setAttribute("data-is-first-time", sightseeingJustCreated);
     }
 }

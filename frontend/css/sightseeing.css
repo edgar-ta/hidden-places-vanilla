@@ -1,0 +1,198 @@
+
+.sightseeing__content-container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 2rem 1rem;
+}
+
+.sightseeing__loading-spinner,
+.sightseeing__invalid-season-content,
+.sightseeing__winner-content, 
+.sightseeing__winner-content__first-time,
+.sightseeing__winner-content__not-first-time,
+.sightseeing__non-winner-content,
+.sightseeing__non-winner-content__first-time,
+.sightseeing__non-winner-content__not-first-time
+{
+    display: none;
+}
+
+/** START::LOADING-SPINNER::START  */
+/** START::LOADING-SPINNER::START  */
+/** START::LOADING-SPINNER::START  */
+
+.sightseeing__content-container[data-is-loading="true"]
+.sightseeing__loading-spinner 
+{
+    display: flex;
+}
+
+
+.sightseeing__loading-spinner {
+    flex-direction: column;
+    align-items: center;
+    min-height: 30vh;
+    justify-content: center;
+}
+
+.loader {
+  --color-1: #0015FF;
+  --color-2: #8A8A8A;
+  --size: 1px;
+
+  width: calc(48 * var(--size));
+  height: calc(48 * var(--size));
+  border: calc(5 * var(--size)) solid var(--color-1);
+  border-bottom-color: var(--color-2);
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/** END::LOADING-SPINNER::END  */
+/** END::LOADING-SPINNER::END  */
+/** END::LOADING-SPINNER::END  */
+
+/** START::INVALID-SEASON::START  */
+/** START::INVALID-SEASON::START  */
+/** START::INVALID-SEASON::START  */
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="false"]
+.sightseeing__invalid-season-content {
+    display: flex;
+}
+
+.sightseeing__invalid-season-content {
+    flex-direction: column;
+}
+
+/** END::INVALID-SEASON::END  */
+/** END::INVALID-SEASON::END  */
+/** END::INVALID-SEASON::END  */
+
+/** START::WINNER::START  */
+/** START::WINNER::START  */
+/** START::WINNER::START  */
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"]
+.sightseeing__winner-content 
+{
+    display: flex;
+}
+
+.sightseeing__winner-content {
+    flex-direction: column;
+}
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-first-time="true"]
+.sightseeing__winner-content__first-time
+{
+    display: flex;
+}
+
+.sightseeing__winner-content__first-time {
+    flex-direction: column;
+}
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-first-time="false"]
+.sightseeing__winner-content__not-first-time
+{
+    display: flex;
+}
+
+.sightseeing__winner-content__not-first-time {
+    flex-direction: column;
+}
+
+/** END::WINNER::END  */
+/** END::WINNER::END  */
+/** END::WINNER::END  */
+
+/** START::NON-WINNER::START  */
+/** START::NON-WINNER::START  */
+/** START::NON-WINNER::START  */
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="false"]
+.sightseeing__non-winner-content 
+{
+    display: flex;
+}
+
+.sightseeing__non-winner-content {
+    flex-direction: column;
+}
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="false"][data-is-first-time="true"]
+.sightseeing__non-winner-content__first-time
+{
+    display: flex;
+}
+
+.sightseeing__non-winner-content__first-time {
+    flex-direction: column;
+}
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="false"][data-is-first-time="false"]
+.sightseeing__non-winner-content__not-first-time
+{
+    display: flex;
+}
+
+.sightseeing__non-winner-content__not-first-time {
+    flex-direction: column;
+}
+
+/** END::NON-WINNER::END  */
+/** END::NON-WINNER::END  */
+/** END::NON-WINNER::END  */
+
+.redeem-code {
+    display: flex;
+    background-color: #EAEAEA;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.75rem;
+    justify-content: space-between;
+}
+
+.redeem-code__input {
+    background-color: transparent;
+    border: none;
+    font-weight: bolder;
+    color: black;
+}
+
+.redeem-code__button {
+    color: black;
+    border: none;
+    background-color: transparent;
+    font-size: 1.5rem;
+}
+
+.contact-tray {
+    display: flex;
+}
+
+.contact-tray__button {
+    display: block;
+    font-size: 2.5rem;
+    padding: 0.5rem 0;
+    background-color: transparent;
+    border: none;
+}
+
+.why-link {
+    color: blue;
+    text-decoration: underline;
+    text-align: center;
+}
