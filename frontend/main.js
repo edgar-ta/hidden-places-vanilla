@@ -87,8 +87,9 @@ export async function ensureUserExists(userId) {
 
 /**
  * Verifica que exista un avistamiento registrado
- * para el usuario y lugar indicados. En caso
- * contrario, registra el avistamiento automáticamente
+ * para el usuario y lugar indicados. Si el avistamiento
+ * no existe, éste se crea en caso de que el lugar
+ * avistado pertenezca a una temporada válida
  * 
  * @param {string} userId La id del usuario 
  * cuyo avistamiento se busca verificar
@@ -96,12 +97,24 @@ export async function ensureUserExists(userId) {
  * cuyo avistamiento se busca verificar
  * 
  * @returns {{ 
- *  sightseeingJustCreated: boolean, 
- *  prizeState: import("./types.js").PrizeState | null,
+ *  sightseeingJustCreated: boolean | null, 
+ *  isWinner: boolean | null,
+ *  isPrizeRedeemed: boolean | null,
+ *  isValidSeason: boolean,
  * }} Si el avistamiento fue
  * recién creado o no
  */
 export async function ensureSightseeingExists(userId, placeId) {
+    const isPlaceValid = await checkIfPlaceIsValid(placeId);
+    if (!isPlaceValid) {
+        return {
+            sightseeingJustCreated: null,
+            isWinner: null,
+            isPrizeRedeemed: null,
+            isValidSeason: false
+        };
+    }
+
     const sightseeingCollection = collection(db, "sightseeings");
     const _query = query(
         sightseeingCollection,
@@ -121,28 +134,26 @@ export async function ensureSightseeingExists(userId, placeId) {
             isWinner,
         };
 
-        if (isWinner) {
-            // @todo Incluir una función que diga si el usuario
-            // ya cobró su premio o no
-            sightseeing.isRedeemed = false;
-        }
-
         const document = await addDoc(sightseeingCollection, sightseeing);
 
         return {
             sightseeingJustCreated: true,
-            prizeState: isWinner? "PRIZE_PENDING": null
+            isWinner,
+            isPrizeRedeemed: isWinner? false: null,
+            isValidSeason: true
         };
     }
 
     const sightseeingId = documents.docs[0].id;
     const sightseeing = documents.docs[0].data();
 
-    const { isWinner, isRedeemed } = sightseeing;
+    const { isWinner } = sightseeing;
 
     return {
         sightseeingJustCreated: false,
-        prizeState: isWinner? (isRedeemed? "PRIZE_REDEEMED": "PRIZE_PENDING"): null
+        isWinner,
+        isPrizeRedeemed: isWinner? (await checkIfPrizeIsRedeemed(placeId)): null,
+        isValidSeason: true,
     };
 }
 
@@ -165,4 +176,52 @@ export async function checkIfPlaceIsUnsighted(placeId) {
     const documents = await getDocs(_query);
 
     return documents.empty;
+}
+
+/**
+ * Revisa si la temporada a la cual pertenece el lugar
+ * especificado sigue siendo válida en la fecha provista
+ * 
+ * @param {string} placeId El lugar cuya temporada se
+ * busca validar
+ * @param {Timestamp} [fecha] La fecha contra la cual
+ * validar la temporada del lugar especificado. Por
+ * defecto es la fecha actual
+ * 
+ * @returns {boolean} Si la temporada a la que pertenece
+ * el lugar es válida o no
+ */
+export async function checkIfPlaceIsValid(placeId, fecha = Timestamp.now()) {
+    const placesCollection = collection(db, "places");
+    const placeRef = doc(placesCollection, placeId);
+    const placeSnap = await getDoc(placeRef);
+
+    /** @type { seasonId: DocumentReference<DocumentData, DocumentData> } */
+    const seasonId = placeSnap.get("seasonId");
+
+    const seasonSnap = await getDoc(seasonId);
+
+    /** @type {{ startDate: Timestamp, endDate: Timestamp }} */
+    const { startDate, endDate } = seasonSnap.data();
+
+    return (startDate.toMillis() <= fecha.toMillis()) && (fecha.toMillis() < endDate.toMillis());
+}
+
+/**
+ * Revisa si el premio asociado al lugar con la id indicada
+ * ya fue cobrado
+ * 
+ * @param {string} placeId La id del lugar cuyo premio
+ * se busca ver si ha sido cobrado o no
+ * 
+ * @returns {boolean} Si el premio asociado al lugar
+ * con la id indicada ya fue cobrado o no
+ */
+export async function checkIfPrizeIsRedeemed(placeId) {
+    const placeRef = doc(db, "places", placeId);
+    const placeSnap = await getDoc(placeRef);
+
+    /** @type {boolean} */
+    const prizeRedeemed = placeSnap.get("prizeRedeemed");
+    return prizeRedeemed;
 }
