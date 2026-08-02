@@ -99,22 +99,11 @@ export async function ensureUserExists(userId) {
  * @returns {{ 
  *  sightseeingJustCreated: boolean | null, 
  *  isWinner: boolean | null,
- *  isPrizeRedeemed: boolean | null,
- *  isValidSeason: boolean,
  * }} Si el avistamiento fue
- * recién creado o no
+ * recién creado o no y si se creó un avistamiento
+ * ganador
  */
 export async function ensureSightseeingExists(userId, placeId) {
-    const isPlaceValid = await checkIfPlaceIsValid(placeId);
-    if (!isPlaceValid) {
-        return {
-            sightseeingJustCreated: null,
-            isWinner: null,
-            isPrizeRedeemed: null,
-            isValidSeason: false
-        };
-    }
-
     const sightseeingCollection = collection(db, "sightseeings");
     const _query = query(
         sightseeingCollection,
@@ -139,8 +128,6 @@ export async function ensureSightseeingExists(userId, placeId) {
         return {
             sightseeingJustCreated: true,
             isWinner,
-            isPrizeRedeemed: isWinner? false: null,
-            isValidSeason: true
         };
     }
 
@@ -152,8 +139,6 @@ export async function ensureSightseeingExists(userId, placeId) {
     return {
         sightseeingJustCreated: false,
         isWinner,
-        isPrizeRedeemed: isWinner? (await checkIfPrizeIsRedeemed(placeId)): null,
-        isValidSeason: true,
     };
 }
 
