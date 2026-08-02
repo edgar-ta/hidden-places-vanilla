@@ -9,8 +9,10 @@
 .sightseeing__loading-spinner,
 .sightseeing__invalid-season-content,
 .sightseeing__winner-content, 
+.sightseeing__winner-content__prize-not-redeemed,
 .sightseeing__winner-content__first-time,
 .sightseeing__winner-content__not-first-time,
+.sightseeing__winner-content__prize-redeemed,
 .sightseeing__non-winner-content,
 .sightseeing__non-winner-content__first-time,
 .sightseeing__non-winner-content__not-first-time
@@ -95,24 +97,28 @@
     flex-direction: column;
 }
 
-.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-first-time="true"]
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-prize-redeemed="false"]
+.sightseeing__winner-content__prize-not-redeemed
+{
+    display: contents;
+}
+
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-prize-redeemed="false"][data-is-first-time="true"]
 .sightseeing__winner-content__first-time
 {
-    display: flex;
+    display: contents;
 }
 
-.sightseeing__winner-content__first-time {
-    flex-direction: column;
-}
-
-.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-first-time="false"]
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-prize-redeemed="false"][data-is-first-time="false"]
 .sightseeing__winner-content__not-first-time
 {
-    display: flex;
+    display: contents;
 }
 
-.sightseeing__winner-content__not-first-time {
-    flex-direction: column;
+.sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="true"][data-is-prize-redeemed="true"]
+.sightseeing__winner-content__prize-redeemed
+{
+    display: contents;
 }
 
 /** END::WINNER::END  */
@@ -136,21 +142,13 @@
 .sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="false"][data-is-first-time="true"]
 .sightseeing__non-winner-content__first-time
 {
-    display: flex;
-}
-
-.sightseeing__non-winner-content__first-time {
-    flex-direction: column;
+    display: contents;
 }
 
 .sightseeing__content-container[data-is-loading="false"][data-is-valid-season="true"][data-is-winner="false"][data-is-first-time="false"]
 .sightseeing__non-winner-content__not-first-time
 {
-    display: flex;
-}
-
-.sightseeing__non-winner-content__not-first-time {
-    flex-direction: column;
+    display: contents;
 }
 
 /** END::NON-WINNER::END  */

@@ -68,6 +68,8 @@ async function registerUserAndTrySightseeing() {
     })
 
     if (placeId !== null) {
+        const container = document.getElementById("contentContainer");
+
         const isPlaceValid = await checkIfPlaceIsValid(placeId);
         if (!isPlaceValid) {
             container.setAttribute("data-is-loading", false);
@@ -79,7 +81,6 @@ async function registerUserAndTrySightseeing() {
             sightseeingJustCreated,
             isWinner,
          } = await ensureSightseeingExists(userId, placeId);
-        const container = document.getElementById("contentContainer");
 
         container.setAttribute("data-is-loading", false);
         container.setAttribute("data-is-valid-season", true);
