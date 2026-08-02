@@ -225,3 +225,27 @@ export async function checkIfPrizeIsRedeemed(placeId) {
     const prizeRedeemed = placeSnap.get("prizeRedeemed");
     return prizeRedeemed;
 }
+
+/**
+ * Recupera la información del premio asociado a un 
+ * lugar específico
+ * 
+ * @param {string} placeId La id del lugar al que 
+ * pertenece al premio cuyos datos se busca recuperar
+ * 
+ * @returns {{
+ *  prizeRedeemed: boolean;
+ *  prize: string;
+ *  redeemCode: string;
+ * }}
+ */
+export async function getPrizeData(placeId) {
+    const placeRef = doc(db, "places", placeId);
+    const placeSnap = await getDoc(placeRef);
+
+    return {
+        prizeRedeemed: placeSnap.get("prizeRedeemed"),
+        prize: placeSnap.get("prize"),
+        redeemCode: placeSnap.get("redeemCode"),
+    }
+}

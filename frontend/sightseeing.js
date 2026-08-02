@@ -1,4 +1,4 @@
-import { ensureSightseeingExists } from "./main.js";
+import { ensureSightseeingExists, getPrizeData } from "./main.js";
 import { ensureUserExists } from "./main.js";
 
 const COOKIE_ID = "_hidden_places_id";
@@ -71,7 +71,6 @@ async function registerUserAndTrySightseeing() {
         const { 
             sightseeingJustCreated,
             isWinner,
-            isPrizeRedeemed,
             isValidSeason
          } = await ensureSightseeingExists(userId, placeId);
         const container = document.getElementById("contentContainer");
@@ -79,8 +78,20 @@ async function registerUserAndTrySightseeing() {
         container.setAttribute("data-is-loading", "false");
         container.setAttribute("data-is-valid-season", isValidSeason);
         container.setAttribute("data-is-winner", isWinner);
-        container.setAttribute("data-is-prize-redeemed", isPrizeRedeemed);
         container.setAttribute("data-is-first-time", sightseeingJustCreated);
+
+        if (isWinner) {
+            const { prizeRedeemed: isPrizeRedeemed, prize, redeemCode } = await getPrizeData(placeId);
+            container.setAttribute("data-is-prize-redeemed", isPrizeRedeemed);
+
+            document.querySelectorAll("span.span-prize").forEach(element => element.textContent = prize);
+            if (!isPrizeRedeemed) {
+                document.querySelectorAll("input.redeem-code__input").forEach(element => element.value = redeemCode);
+            }
+        } else {
+            container.setAttribute("data-is-prize-redeemed", null);
+        }
+
     }
 }
 
