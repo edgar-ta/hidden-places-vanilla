@@ -97,11 +97,12 @@ export async function ensureUserExists(userId) {
  * cuyo avistamiento se busca verificar
  * 
  * @returns {{ 
- *  sightseeingJustCreated: boolean | null, 
- *  isWinner: boolean | null,
- * }} Si el avistamiento fue
- * recién creado o no y si se creó un avistamiento
- * ganador
+ *  sightseeingJustCreated: boolean, 
+ *  isWinner: boolean,
+ *  sightseeingId: string
+ * }} Un objeto que describe el avistamiento correspondiente
+ * al usuario y lugar indicados; indica si se acaba de crear,
+ * si el usuario es ganador y la id del avistamiento
  */
 export async function ensureSightseeingExists(userId, placeId) {
     const sightseeingCollection = collection(db, "sightseeings");
@@ -128,6 +129,7 @@ export async function ensureSightseeingExists(userId, placeId) {
         return {
             sightseeingJustCreated: true,
             isWinner,
+            sightseeingId: document.id
         };
     }
 
@@ -139,6 +141,7 @@ export async function ensureSightseeingExists(userId, placeId) {
     return {
         sightseeingJustCreated: false,
         isWinner,
+        sightseeingId
     };
 }
 
@@ -233,4 +236,31 @@ export async function getPrizeData(placeId) {
         prize: placeSnap.get("prize"),
         redeemCode: placeSnap.get("redeemCode"),
     }
+}
+
+/**
+ * Obtiene la posición en la cola imaginaria de personas que 
+ * han avistado un lugar para el usuario y lugar del
+ * avistamiento indicado
+ * 
+ * @param {string} sightseeingId La id del avistamiento 
+ * cuya posición de busca recuperar
+ * @returns {number} La posición del avistamiento indicado
+ * (comenzando con 1)
+ */
+export async function getSightseerIndex(sightseeingId) {
+    const sightseeingRef = doc(db, "sightseeings", sightseeingId);
+    const sightseeingSnap = await getDoc(sightseeingRef);
+
+    const sightseeingDate = sightseeingSnap.get("creationDate");
+    const placeId = sightseeingSnap.get("placeId");
+
+    const _query = query(
+        collection(db, "sightseeings"),
+        where("placeId", "==", placeId),
+        where("creationDate", "<", sightseeingDate)
+    );
+
+    const snap = await getDocs(_query);
+    return snap.docs.length + 1;
 }
