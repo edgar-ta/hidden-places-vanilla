@@ -175,6 +175,35 @@
     border: none;
     background-color: transparent;
     font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    position: relative;
+}
+
+.redeem-code__copy-icon, 
+.redeem-code__check-icon 
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 250ms ease-in-out opacity;
+}
+
+.redeem-code__copy-icon {
+    opacity: 1;
+}
+
+.redeem-code__check-icon {
+    opacity: 0;
+}
+
+.redeem-code[data-copied="true"] .redeem-code__button > .redeem-code__copy-icon {
+    opacity: 0;
+}
+
+.redeem-code[data-copied="true"] .redeem-code__button > .redeem-code__check-icon {
+    opacity: 1;
 }
 
 .contact-tray {

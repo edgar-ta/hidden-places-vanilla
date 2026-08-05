@@ -48,7 +48,7 @@ function getCookie(name) {
  * si la página que visitó el usuario corresponde
  * con un lugar, registra su avistamiento.
  */
-async function registerUserAndTrySightseeing() {
+export async function registerUserAndTrySightseeing() {
     let userId = getCookie(COOKIE_ID);
     if (userId === null) {
         userId = crypto.randomUUID();
@@ -122,6 +122,26 @@ function getPlaceId() {
     return placeId;
 }
 
-(async () => {
-    await registerUserAndTrySightseeing();
-})();
+let redeemCodeAnimationHandle = null;
+/**
+ * Copia el contenido de la input `.redeem-code__input`
+ * al portapapeles del usuario. Asimismo, establece
+ * el atributo `data-copied` del div contenedor a `true`
+ */
+export async function copyRedeemCode() {
+    /** @type {HTMLInputElement} */
+    const input = document.querySelector(".redeem-code__input");
+    const redeemCode = input.value;
+    
+    await navigator.clipboard.writeText(redeemCode);
+    document.querySelector(".redeem-code").setAttribute("data-copied", "true");
+
+    if (redeemCodeAnimationHandle !== null) {
+        window.clearTimeout(redeemCodeAnimationHandle);
+    }
+
+    window.setTimeout(() => {
+        document.querySelector(".redeem-code").setAttribute("data-copied", "false");
+        redeemCodeAnimationHandle = null;
+    }, 750);
+}
