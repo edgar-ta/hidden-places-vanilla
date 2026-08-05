@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="/css/sightseeing.css">
 
     <script defer src="/dist/main.js"></script>
+    <script defer>
+        window.onload = async () => {
+            await HiddenPlaces.registerUserAndTrySightseeing();
+        };
+    </script>
     <title>Hidden Places</title>
 </head>
 <body>
@@ -103,10 +108,11 @@
                         Reclámalos usando el siguiente código
                     </p>
                 </div>
-                <div class="redeem-code">
+                <div class="redeem-code" data-copied="false">
                     <input class="redeem-code__input" type="text" disabled value="yhlqmdlg32">
-                    <button class="redeem-code__button">
-                        <i class="fa-solid fa-copy"></i>
+                    <button onclick="HiddenPlaces.copyRedeemCode()" class="redeem-code__button">
+                        <i class="redeem-code__copy-icon fa-solid fa-copy"></i>
+                        <i class="redeem-code__check-icon fa-solid fa-check"></i>
                     </button>
                 </div>
                 <div class="contact-tray">
