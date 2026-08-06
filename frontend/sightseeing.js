@@ -1,5 +1,6 @@
 import { checkIfPlaceIsValid, ensureSightseeingExists, getPrizeData, getSightseerIndexById } from "./main.js";
 import { ensureUserExists } from "./main.js";
+import confetti from "@hiseb/confetti";
 
 const COOKIE_ID = "_hidden_places_id";
 const COOKIE_USERNAME = "_hidden_places_username";
@@ -104,6 +105,9 @@ export async function registerUserAndTrySightseeing() {
             container.setAttribute("data-is-prize-redeemed", null);
         }
 
+        if (sightseeingJustCreated) {
+            makeConfettiRain();
+        }
     }
 }
 
@@ -145,4 +149,21 @@ export async function copyRedeemCode() {
         document.querySelector(".redeem-code").setAttribute("data-copied", "false");
         redeemCodeAnimationHandle = null;
     }, 750);
+}
+
+/**
+ * Crea una lluvia de confetti esporádica
+ */
+export function makeConfettiRain() {
+    let positionList = [
+        { x: window.innerWidth * 0.75, y: window.innerHeight * 0.70 },
+        { x: window.innerWidth * 0.25, y: window.innerHeight * 0.60 },
+        { x: window.innerWidth * 0.80, y: window.innerHeight * 0.40 },
+        { x: window.innerWidth * 0.20, y: window.innerHeight * 0.20 },
+    ];
+    for(let i = 0; i < positionList.length; i++) {
+        setTimeout(() => {
+            confetti({ position: positionList[i] });
+        }, i * 250);
+    }
 }
