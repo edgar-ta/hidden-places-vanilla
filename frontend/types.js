@@ -35,12 +35,13 @@ import { Timestamp } from "firebase/firestore";
  * @property {Timestamp} creationDate La fecha de creación
  * del avistamiento (es decir, la fecha en que se realizó
  * el avistamiento)
- * @property {boolean} isWinner Si el usuario asociado
- * al avistamiento fue quien ganó el premio
  * @property {string} placeId La id del lugar asociado a
  * este avistamiento
  * @property {string} userId La id del usuario asociado a
  * este avistamiento
+ * @property {number} index El índice del avistamiento en
+ * la cola de avistamientos que han sido creados para un
+ * lugar específico
  */
 
 

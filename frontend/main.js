@@ -10,7 +10,8 @@ import {
     setDoc,
     addDoc,
     collection,
-    Timestamp
+    Timestamp,
+    orderBy
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -98,7 +99,7 @@ export async function ensureUserExists(userId) {
  * 
  * @returns {{ 
  *  sightseeingJustCreated: boolean, 
- *  isWinner: boolean,
+ *  sightseeingIndex: number;
  *  sightseeingId: string
  * }} Un objeto que describe el avistamiento correspondiente
  * al usuario y lugar indicados; indica si se acaba de crear,
@@ -114,33 +115,31 @@ export async function ensureSightseeingExists(userId, placeId) {
     const documents = await getDocs(_query);
 
     if (documents.empty) {
-        const isWinner = await checkIfPlaceIsUnsighted(placeId);
+        const index = await getSightseerIndex(placeId);
 
         /** @type {import('./types.js').SightseeingModel} */
         const sightseeing = {
             userId,
             placeId,
             creationDate: Timestamp.now(),
-            isWinner,
+            index
         };
 
         const document = await addDoc(sightseeingCollection, sightseeing);
 
         return {
             sightseeingJustCreated: true,
-            isWinner,
+            sightseeingIndex: index,
             sightseeingId: document.id
         };
     }
 
     const sightseeingId = documents.docs[0].id;
-    const sightseeing = documents.docs[0].data();
-
-    const { isWinner } = sightseeing;
+    const sightseeingSnap = documents.docs[0];
 
     return {
         sightseeingJustCreated: false,
-        isWinner,
+        sightseeingIndex: sightseeingSnap.get("index"),
         sightseeingId
     };
 }
@@ -248,7 +247,7 @@ export async function getPrizeData(placeId) {
  * @returns {number} La posición del avistamiento indicado
  * (comenzando con 1)
  */
-export async function getSightseerIndex(sightseeingId) {
+export async function getSightseerIndexById(sightseeingId) {
     const sightseeingRef = doc(db, "sightseeings", sightseeingId);
     const sightseeingSnap = await getDoc(sightseeingRef);
 
@@ -263,4 +262,33 @@ export async function getSightseerIndex(sightseeingId) {
 
     const snap = await getDocs(_query);
     return snap.docs.length + 1;
+}
+
+/**
+ * Obtiene el índice del siguiente avistamiento que se
+ * ha de registrar en la cola de avistamientos del
+ * lugar indicado.
+ * 
+ * @param {string} placeId La id del lugar en cuya cola
+ * de avistamientos se busca registrar uno nuevo.
+ * 
+ * @returns {number} El índice del seguimiente avistamiento
+ * (hipotético) a colocar en la cola de avistamientos 
+ * de este lugar.
+ */
+async function getSightseerIndex(placeId) {
+    const _query = query(
+        collection(db, "sightseeings"),
+        where("placeId", "==", placeId),
+        orderBy("creationDate", "desc"),
+        limit(1)
+    );
+
+    const documents = await getDocs(_query);
+    if (documents.empty) return 1;
+    
+    const sightseeingSnap = documents.docs[0];
+    const index = sightseeingSnap.get("index");
+
+    return index + 1;
 }
